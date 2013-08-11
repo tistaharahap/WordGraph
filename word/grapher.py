@@ -8,7 +8,7 @@ import copy
 import re
 
 
-class WordGraph(object):
+class WordGrapher(object):
 
     doc = ""
     blob = None

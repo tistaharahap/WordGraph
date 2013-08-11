@@ -9,7 +9,7 @@ Weighting is performed by using [TF-IDF](https://en.wikipedia.org/wiki/Tf%E2%80%
 ## Installation
 
 ```bash
-$ sudo pip install wordgraph
+$ sudo pip install wordgrapher
 $ python
 >> import nltk
 >> nltk.download()
@@ -28,7 +28,7 @@ $ mv indonesian ~/nltk_data/corpora/stopwords/
 ## Examples
 
 ```python
-from word.graph import WordGraph
+from word.graph import WordGrapher
 
 
 doc = """museumnya bagus.., kalo lagi liburan rame banget, ga cuma wisatawan dari Indonesia, tapi dari luar

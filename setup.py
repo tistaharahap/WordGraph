@@ -13,7 +13,7 @@ def read(fname):
     return content
 
 setup(
-    name='wordgraph',
+    name='wordgrapher',
     version=word.__version__,
     description='Word Graph utility built with NLTK and TextBlob',
     long_description=(read("README.md")),
