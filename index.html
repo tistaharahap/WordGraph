@@ -1,0 +1,132 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Wordgraph by tistaharahap</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Wordgraph</h1>
+        <p>Word Graph utility built with NLTK and TextBlob</p>
+        <p class="view"><a href="https://github.com/tistaharahap/WordGraph">View the Project on GitHub <small>tistaharahap/WordGraph</small></a></p>
+        <ul>
+          <li><a href="https://github.com/tistaharahap/WordGraph/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/tistaharahap/WordGraph/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/tistaharahap/WordGraph">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a name="wordgraph" class="anchor" href="#wordgraph"><span class="octicon octicon-link"></span></a>WordGraph</h1>
+
+<p>This is a word grapher made with <a href="http://www.nltk.org">NLTK</a> and <a href="http://textblob.readthedocs.org/">TextBlob</a>.</p>
+
+<p>The primary purpose of this module is to create a graph connection from a collection of words and documents. Each connection together with corresponding words will have its own weight relative to the whole set of documents.</p>
+
+<p>Weighting is performed by using <a href="https://en.wikipedia.org/wiki/Tf%E2%80%93idf">TF-IDF</a> (Term Frequency - Inverse Document Frequency) algorithm. The algorithm basically figures out which words or set of words with most frequencies relative to the document itself and a set of documents.</p>
+
+<h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<div class="highlight"><pre><span class="nv">$ </span>sudo pip install wordgrapher
+<span class="nv">$ </span>python
+&gt;&gt; import nltk
+&gt;&gt; nltk.download<span class="o">()</span>
+</pre></div>
+
+<p>Please download the stopwords module for NLTK in order to have better accuracy.</p>
+
+<p>If you need Indonesian stopwords, you can download from <a href="https://github.com/pebbie/pebahasa/blob/master/indonesian">https://github.com/pebbie/pebahasa/blob/master/indonesian</a> like so:</p>
+
+<div class="highlight"><pre><span class="nv">$ </span>wget https://raw.github.com/pebbie/pebahasa/master/indonesian
+<span class="nv">$ </span>mkdir -p ~/nltk_data/corpora/stopwords/
+<span class="nv">$ </span>mv indonesian ~/nltk_data/corpora/stopwords/
+</pre></div>
+
+<h2>
+<a name="examples" class="anchor" href="#examples"><span class="octicon octicon-link"></span></a>Examples</h2>
+
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">word.graph</span> <span class="kn">import</span> <span class="n">WordGrapher</span>
+
+
+<span class="n">doc</span> <span class="o">=</span> <span class="s">"""museumnya bagus.., kalo lagi liburan rame banget, ga cuma wisatawan dari Indonesia, tapi dari luar</span>
+<span class="s">negeri juga... luas banget lagi di dalemnya.... seru..!! hehehehe"""</span>
+<span class="n">docs</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="sd">"""Museum jakarta, banyak peninggalan Zaman dulu, trus barang2nya udah Tua dan rapuh.. banyak cerita d museum ini</span>
+<span class="sd">    tentang kota jakarta..di museum ini seringkali foto-foto karena tempatnya bersejarah bgt jadi harus di</span>
+<span class="sd">    abadikan. Kayaknya museum sejarah jakarta menjadi spot 'penting' belakangan ini. tiap weekend pasti PENUH sama</span>
+<span class="sd">    orang-orang yang mau foto-foto. gue sampe sempet ngantri cuma buat foto gedung doang."""</span><span class="p">,</span>
+
+    <span class="sd">"""mau weekend tanpa mesti ngabisin duit ya dateng aja ke sini... kalo yang hobi fotografi juga banyak spot2 yang</span>
+<span class="sd">    menarik untuk difoto disini... kalo pengen moto arsitekturnya disarankan dateng pagi2 buta soalnya kalo udah agak</span>
+<span class="sd">    siangan pasti bakalan rame banget"""</span><span class="p">,</span>
+
+    <span class="sd">"""ini dia yang jarang dilakukan anak muda, habis hang out bareng teman2 langsung cabut ke mall atau main ke rumah</span>
+<span class="sd">    teman. cobain sensasi berbeda dengan datang ke museum apalagi sebentar lagi ada konser avril. pasti seru banget</span>
+<span class="sd">    ngajakin si doi idola kita main ke situ, supaya lebih tau juga gimana sejarah kota yang tempati untuk konser</span>
+<span class="sd">    itu. :)"""</span><span class="p">,</span>
+
+    <span class="sd">"""weekend seru juga kalau berkunjung ke museum sejarah jakarta, selain karena di halamannya biasanya ramai</span>
+<span class="sd">    orang-orang dan kita bisa hunting foto, di museum ini juga kalau weekend ada pertunjukkan mystery of batavia..</span>
+<span class="sd">    tambah asyik deh kalau jalan-jalan ke sini :)"""</span><span class="p">,</span>
+
+    <span class="sd">"""Terletak di kawasan kota tua tepatnya dengan luas lebih dari 1.300 meter persegi. Dahulu gedung ini merupakan</span>
+<span class="sd">    balai kota lalu diresmikan menjadi Museum Fatahillah pada 30 Maret 1974. Kita dapat menemui berbagai objek di</span>
+<span class="sd">    museum ini seperti perjalanan sejarah Jakarta, replika peninggalan masa Tarumanegara dan Pajajaran, hasil</span>
+<span class="sd">    penggalian arkeologi, koleksi tentang kebudayaan Betawi, numismatic, dan becak. Ada juga patung Dewa Hermes dan</span>
+<span class="sd">    meriam Si Jagur yang dianggap mempunyai kekuatan magis serta bekas penjara bawah tanah yang dulu sempat digunakan</span>
+<span class="sd">    pada zaman penjajahan Belanda. Benar-benar museum yang patut dikunjungi, kita bisa hunting foto ataupun sekedar</span>
+<span class="sd">    menambah pengetahuan, apalagi dengan arsitekturnya yang klasik bergaya Belanda, akan menciptakan aura yang berbeda</span>
+<span class="sd">    ketika kita masuk ke dalamnya."""</span><span class="p">,</span>
+
+    <span class="sd">"""Merupakan aset bersejarah kebanggan Jakarta. Berada di komplek Kota Tua yang terkenal indah banget, museum ini</span>
+<span class="sd">    juga jadi salah satu daya tarik banyak pengunjung, ngga cuma lokal tapi juga mancanegara. Pas masuk ke dalamnya,</span>
+<span class="sd">    atmosfernya langsung beda karena gaya arsitektur Belanda yang masih dipertahankan. Kalau mau keliling bisa</span>
+<span class="sd">    ditemenin sama guide ataupun bisa juga sendiri. Mau wisata pendidikan sejarah Jakarta sekaligus hunting foto</span>
+<span class="sd">    semuanya lengkap di sini. :)"""</span><span class="p">,</span>
+
+    <span class="sd">"""Weekend pagi seru juga datang kesini bisa hunting foto2 yang keren dari tempat ini. Arsitektur bangunan disini</span>
+<span class="sd">    unik2 dan super jadul seru rasanya kesini sekali2 for a change from the bustling city view that we have every</span>
+<span class="sd">    day."""</span><span class="p">,</span>
+
+    <span class="sd">"""Dikawasan ini sering sekali dijadikan tempat untuk hunting foto modeling maupun prewedding. Hal tersebut</span>
+<span class="sd">    dikarenakan setting tempat yang kuno dan klasik dan bernuansa jaman kolonial. Di tempat ini ada beberapa museum</span>
+<span class="sd">    seperti museum fatahilah yang menceritakan sejarah jakarta dan museum wayang yang memamerkan semua koleksi wayang</span>
+<span class="sd">    yang terdapat di Indonesia. Di Hall atau lapangan bagian tengah dari kawasan ini selalu ramai dikunjungi oleh</span>
+<span class="sd">    masyarakat yang ingin bersantai dengan menyewa sepeda tua yang dapat digunakan untuk berkeliling dengan tarif</span>
+<span class="sd">    perjam sebesar 20ribu saja. Jika kita lapar maka ada cafe Batavia yang selalu ramai dikunjungi. Kawasan kota tua</span>
+<span class="sd">    ini juga sering dijadikan salah satu tempat yang wajib dikunjungi oleh orang asing yang sedang berkunjung ke</span>
+<span class="sd">    jakarta jadi tidak heran terdapat banyak sekali bule yang berlalu-lalang disini. Bagian yang menjadi favorit gwa</span>
+<span class="sd">    adalah saat malam hari terdapat wisata malam yang memanjakan mata. Di depan museum Fatahillah sering dibuat</span>
+<span class="sd">    pertunjukan laser yang sangat indah dengan lampu-lampu sorot yang menawan. :)"""</span>
+<span class="p">]</span>
+
+<span class="n">wg</span> <span class="o">=</span> <span class="n">WordGraph</span><span class="p">(</span><span class="n">doc</span><span class="o">=</span><span class="n">doc</span><span class="p">,</span> <span class="n">docs</span><span class="o">=</span><span class="n">docs</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">wg</span><span class="o">.</span><span class="n">analyze</span><span class="p">(</span><span class="n">count</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">percentage</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+</pre></div>
+
+<h2>
+<a name="development-history" class="anchor" href="#development-history"><span class="octicon octicon-link"></span></a>Development History</h2>
+
+<p><strong>0.1.0</strong> - Basic TF-IDF Methods</p>
+      </section>
+    </div>
+    <footer>
+      <p>Project maintained by <a href="https://github.com/tistaharahap">tistaharahap</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
