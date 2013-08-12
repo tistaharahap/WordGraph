@@ -1,4 +1,6 @@
 from word.grapher import WordGrapher
+import pickle
+import os
 import time
 
 
@@ -54,12 +56,38 @@ docs = [
     pertunjukan laser yang sangat indah dengan lampu-lampu sorot yang menawan. :)"""
 ]
 
+def pickle_get(filename):
+    try:
+        statinfo = os.stat(filename)
+
+        if statinfo.st_size > 0:
+            f = open(filename)
+            result = pickle.load(f)
+            f.close()
+
+            return result
+
+        raise OSError
+    except OSError:
+        return None
+
+
+def pickle_set(filename, obj):
+    f = open(filename, 'wb')
+    pickle.dump(obj, f)
+    f.close()
+
 _start = time.time()
 
-wg = WordGrapher()
-wg.set_document(doc=doc)
-wg.set_documents(docs=docs)
-wg.analyze(count=1000, percentage=True)
+fn = "wg.pickle"
+wg = pickle_get(filename=fn)
+if wg is None:
+    wg = WordGrapher()
+    wg.set_document(doc=doc)
+    wg.set_documents(docs=docs)
+    wg.analyze(count=1000, percentage=True)
+    pickle_set(filename=fn, obj=wg)
+
 graph = wg.graph(word="banget")
 elapsed = time.time() - _start
 
