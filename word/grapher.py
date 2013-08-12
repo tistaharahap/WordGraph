@@ -20,6 +20,8 @@ class WordGrapher(object):
     tokens = None
     tokenizer = None
 
+    tfidf = None
+
     stopwords = []
     try:
         stopwords.extend(nltk.corpus.stopwords.words('indonesian'))
@@ -27,26 +29,64 @@ class WordGrapher(object):
     except IOError:
         pass
 
-    def __init__(self, doc, docs=None):
-        self.doc = doc.lower()
-
+    def __init__(self, doc=None, docs=None):
         self.tokenizer = StopwordsTokenizer(stopwords=self.stopwords)
-        self.blob = TextBlob(text=self.doc, tokenizer=self.tokenizer)
-        self.tokens = copy.deepcopy(self.blob.tokens)
 
-        self.bigrams = self.bigramify(self.blob.tokens)
-        self.tokens.extend(self.bigrams)
+        if doc:
+            self.set_document(doc=doc)
 
-        self.trigrams = self.trigramify(self.blob.tokens)
-        self.tokens.extend(self.trigrams)
+        if docs:
+            self.set_documents(docs=docs)
 
-        self.docs = docs
+    def set_document(self, doc, docs_list_mode=False):
+        if doc:
+            self.initialize_document(doc=doc, docs_list_mode=docs_list_mode)
+        else:
+            raise ValueError("Document must not be None or empty")
 
-    def bigramify(self, tokens):
-        return ["%s %s" % (words[0], words[1]) for words in bigrams(tokens)]
+    def set_documents(self, docs):
+        if docs and isinstance(docs, list) and len(docs) > 0:
+            self.docs = [self.set_document(doc=doc, docs_list_mode=True) for doc in docs]
+        else:
+            raise ValueError("Documents must not be None or and empty List")
 
-    def trigramify(self, tokens):
-        return ["%s %s %s" % (words[0], words[1], words[2]) for words in trigrams(tokens)]
+    def initialize_document(self, doc, docs_list_mode=False):
+        if not docs_list_mode:
+            self.doc = doc.lower()
+
+            self.blob = TextBlob(text=self.doc, tokenizer=self.tokenizer)
+            self.tokens = copy.deepcopy(self.blob.tokens)
+
+            self.bigrams = self.bigramify(self.blob.tokens)
+            self.tokens.extend(self.bigrams)
+
+            self.trigrams = self.trigramify(self.blob.tokens)
+            self.tokens.extend(self.trigrams)
+        else:
+            doc = doc.lower()
+
+            blob = TextBlob(text=doc, tokenizer=self.tokenizer)
+            tokens = copy.deepcopy(blob.tokens)
+
+            bigram = self.bigramify(tokens=tokens)
+            tokens.extend(bigram)
+
+            trigram = self.trigramify(tokens=tokens)
+            tokens.extend(trigram)
+
+            return tokens
+
+    def bigramify(self, tokens, as_string=True):
+        if as_string:
+            return ["%s %s" % (words[0], words[1]) for words in bigrams(tokens)]
+        else:
+            return bigrams(tokens)
+
+    def trigramify(self, tokens, as_string=True):
+        if as_string:
+            return ["%s %s %s" % (words[0], words[1], words[2]) for words in trigrams(tokens)]
+        else:
+            return trigrams(tokens)
 
     def ngrams(self, n):
         return self.blob.ngrams(n=n)
@@ -88,6 +128,9 @@ class WordGrapher(object):
         return self.tf(word) * self.idf(word)
 
     def analyze(self, count=10, percentage=False):
+        if not self.doc or not self.docs:
+            raise ValueError("Document and its Documents Set must not be None or empty")
+
         score = {
             'freq': {},
             'tf': {},
@@ -112,15 +155,32 @@ class WordGrapher(object):
                     final[token] = score['tf-idf'][token]
 
         if not percentage:
-            return [item for item in sorted(final.items(), key=lambda x: x[1], reverse=True)[:count]]
+            self.tfidf = [item for item in sorted(final.items(), key=lambda x: x[1], reverse=True)[:count]]
+            return self.tfidf
         else:
             result = [item for item in sorted(final.items(), key=lambda x: x[1], reverse=True)[:count]]
             max = 0.0
             for item in result:
                 if item[1] > max:
                     max = item[1]
-            return [(item[0], "%.2f%%" % (item[1]/max*100)) for item in result]
+            self.tfidf = [(item[0], "%.2f%%" % (item[1]/max*100)) for item in result]
+            return self.tfidf
 
+    def graph(self, word):
+        if not self.tfidf:
+            raise ValueError("Please call analyze first before creating a graph")
+
+        result = {}
+        tris = self.trigramify(tokens=self.blob.tokens, as_string=False)
+
+        matches = ["%s %s %s" % (tri[0], tri[1], tri[2]) for tri in tris if word in tri[1]]
+        result['tris'] = [item for item in self.tfidf if item[0] in matches]
+
+        bis = self.bigramify(tokens=self.blob.tokens, as_string=False)
+        matches = ["%s %s" % (bi[0], bi[1]) for bi in bis if word in bi[0] or word in bi[1]]
+        result['twos'] = [item for item in self.tfidf if item[0] in matches]
+
+        return result
 
 class StopwordsTokenizer(WordTokenizer):
 

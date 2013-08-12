@@ -65,19 +65,17 @@ class GrapherTest(unittest.TestCase):
         self.assertIsInstance(self.wg, WordGrapher, msg="WordGrapher object must be an instance of WordGrapher")
         self.assertIsNotNone(self.wg, msg="WordGrapher object is None")
 
-    def test_wordgraph_error(self):
-        wg = None
-        try:
-            wg = WordGrapher(doc=None, docs=None)
-        except AttributeError:
-            pass
-        except TypeError:
-            pass
-
-        self.assertIsNone(wg, msg="WordGrapher error test must produce an error. D'oh!")
-
     def test_wordgraph_tfidf(self):
         result = self.wg.analyze()
 
         self.assertIsNotNone(result, msg="TF-IDF Result must not be None")
         self.assertIsInstance(result, list, msg="TF-IDF Result must be a List instance")
+
+    def test_wordgraph_graph(self):
+        self.wg.analyze(count=1000, percentage=True)
+        graph = self.wg.graph(word="banget")
+
+        self.assertIsNotNone(graph, msg="Returned Graph object is None")
+        self.assertIsInstance(graph, dict, msg="Returned Graph object must be a Dictionary")
+        self.assertIsNotNone(graph['twos'], msg="Return Graph TWOS is None")
+        self.assertIsNotNone(graph['tris'], msg="Return Graph TRIS is None")
