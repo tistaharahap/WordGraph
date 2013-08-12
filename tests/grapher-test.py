@@ -71,6 +71,8 @@ class GrapherTest(unittest.TestCase):
             wg = WordGrapher(doc=None, docs=None)
         except AttributeError:
             pass
+        except TypeError:
+            pass
 
         self.assertIsNone(wg, msg="WordGrapher error test must produce an error. D'oh!")
 
