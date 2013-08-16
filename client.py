@@ -4,13 +4,13 @@ import os
 import time
 
 
-doc = """museumnya bagus.., kalo lagi liburan rame banget, ga cuma wisatawan dari Indonesia, tapi dari luar
-negeri juga... luas banget lagi di dalemnya.... seru..!! hehehehe"""
-docs = [
-    """Museum jakarta, banyak peninggalan Zaman dulu, trus barang2nya udah Tua dan rapuh.. banyak cerita d museum ini
+doc = """Museum jakarta, banyak peninggalan Zaman dulu, trus barang2nya udah Tua dan rapuh.. banyak cerita d museum ini
     tentang kota jakarta..di museum ini seringkali foto-foto karena tempatnya bersejarah bgt jadi harus di
     abadikan. Kayaknya museum sejarah jakarta menjadi spot 'penting' belakangan ini. tiap weekend pasti PENUH sama
-    orang-orang yang mau foto-foto. gue sampe sempet ngantri cuma buat foto gedung doang.""",
+    orang-orang yang mau foto-foto. gue sampe sempet ngantri cuma buat foto gedung doang."""
+docs = [
+    """museumnya bagus.., kalo lagi liburan rame banget, ga cuma wisatawan dari Indonesia, tapi dari luar
+    negeri juga... luas banget lagi di dalemnya.... seru..!! hehehehe"""
 
     """mau weekend tanpa mesti ngabisin duit ya dateng aja ke sini... kalo yang hobi fotografi juga banyak spot2 yang
     menarik untuk difoto disini... kalo pengen moto arsitekturnya disarankan dateng pagi2 buta soalnya kalo udah agak
@@ -83,16 +83,18 @@ fn = "wg.pickle"
 wg = pickle_get(filename=fn)
 if wg is None:
     wg = WordGrapher()
-    wg.set_document(doc=doc)
     wg.set_documents(docs=docs)
+
+    d = ""
+    for item in docs:
+        d = "%s %s" % (d, item)
+    wg.set_document(doc=d)
+
     wg.analyze(count=1000, percentage=True)
     pickle_set(filename=fn, obj=wg)
 
 graph = wg.graph(word="banget")
 elapsed = time.time() - _start
-
-#for item in result:
-#    print "%s - %s" % (item[0], item[1])
 
 print graph
 

@@ -1,2 +1,4 @@
 textblob
 nltk
+gevent
+greenlet

@@ -22,8 +22,8 @@ setup(
     author='Batista Harahap',
     author_email='batista@bango29.com',
     url='https://github.com/tistaharahap/WordGraph',
-    setup_requires=['nltk', 'textblob>=0.5.0'],
-    packages=['word'],
+    setup_requires=['nltk', 'textblob>=0.5.0', 'greenlet', 'gevent'],
+    packages=['word', 'mmirman'],
     classifiers=(
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',

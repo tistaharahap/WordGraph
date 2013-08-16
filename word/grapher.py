@@ -40,7 +40,7 @@ class WordGrapher(object):
 
     def set_document(self, doc, docs_list_mode=False):
         if doc:
-            self.initialize_document(doc=doc, docs_list_mode=docs_list_mode)
+            return self.initialize_document(doc=doc, docs_list_mode=docs_list_mode)
         else:
             raise ValueError("Document must not be None or empty")
 
@@ -95,6 +95,12 @@ class WordGrapher(object):
         if docs is None:
             return self.tokens.count(word)
         else:
+            if not isinstance(docs, str):
+                d = ""
+                for item in docs:
+                    d = "%s %s" % (d, item)
+                docs = d
+
             blob = TextBlob(text=docs, tokenizer=self.tokenizer)
             blob.tokens.extend(self.bigramify(blob))
             blob.tokens.extend(self.trigramify(blob))
@@ -121,6 +127,7 @@ class WordGrapher(object):
             docs_length = 1
         else:
             docs_length = len(self.docs)
+
         num_docs = self.num_docs_containing(word)
         return math.log(docs_length / float(num_docs))
 
@@ -135,14 +142,12 @@ class WordGrapher(object):
             'freq': {},
             'tf': {},
             'idf': {},
-            'tf-idf': {},
-            'tokens': {}
+            'tf-idf': {}
         }
 
         for token in self.tokens:
             score['freq'][token] = self.freq(token)
             score['tf'][token] = self.tf(token)
-            score['tokens'] = self.tokens
             score['idf'][token] = self.idf(token)
             score['tf-idf'][token] = math.fabs(self.tf_idf(token))
 
@@ -167,6 +172,9 @@ class WordGrapher(object):
             return self.tfidf
 
     def graph(self, word):
+        return self.graph_doc(word=word)
+
+    def graph_doc(self, word):
         if not self.tfidf:
             raise ValueError("Please call analyze first before creating a graph")
 
