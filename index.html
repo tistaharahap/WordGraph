@@ -1,33 +1,37 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
+    <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Wordgraph by tistaharahap</title>
-
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <script src="javascripts/scale.fix.js"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+    <title>Wordgraph by tistaharahap</title>
   </head>
+
   <body>
-    <div class="wrapper">
-      <header>
-        <h1>Wordgraph</h1>
-        <p>Word Graph utility built with NLTK and TextBlob</p>
-        <p class="view"><a href="https://github.com/tistaharahap/WordGraph">View the Project on GitHub <small>tistaharahap/WordGraph</small></a></p>
-        <ul>
-          <li><a href="https://github.com/tistaharahap/WordGraph/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/tistaharahap/WordGraph/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/tistaharahap/WordGraph">View On <strong>GitHub</strong></a></li>
-        </ul>
-      </header>
-      <section>
-        <h1>
+    <div id="container">
+      <div class="inner">
+
+        <header>
+          <h1>Wordgraph</h1>
+          <h2>Word Graph utility built with NLTK and TextBlob</h2>
+        </header>
+
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/tistaharahap/WordGraph/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/tistaharahap/WordGraph/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/tistaharahap/WordGraph" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+          <h1>
 <a name="wordgraph" class="anchor" href="#wordgraph"><span class="octicon octicon-link"></span></a>WordGraph</h1>
 
 <p>This is a word grapher made with <a href="http://www.nltk.org">NLTK</a> and <a href="http://textblob.readthedocs.org/">TextBlob</a>.</p>
@@ -57,16 +61,19 @@
 <h2>
 <a name="examples" class="anchor" href="#examples"><span class="octicon octicon-link"></span></a>Examples</h2>
 
-<div class="highlight"><pre><span class="kn">from</span> <span class="nn">word.graph</span> <span class="kn">import</span> <span class="n">WordGrapher</span>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">word.grapher</span> <span class="kn">import</span> <span class="n">WordGrapher</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">time</span>
 
 
-<span class="n">doc</span> <span class="o">=</span> <span class="s">"""museumnya bagus.., kalo lagi liburan rame banget, ga cuma wisatawan dari Indonesia, tapi dari luar</span>
-<span class="s">negeri juga... luas banget lagi di dalemnya.... seru..!! hehehehe"""</span>
+<span class="n">doc</span> <span class="o">=</span> <span class="s">"""Museum jakarta, banyak peninggalan Zaman dulu, trus barang2nya udah Tua dan rapuh.. banyak cerita d museum ini</span>
+<span class="s">    tentang kota jakarta..di museum ini seringkali foto-foto karena tempatnya bersejarah bgt jadi harus di</span>
+<span class="s">    abadikan. Kayaknya museum sejarah jakarta menjadi spot 'penting' belakangan ini. tiap weekend pasti PENUH sama</span>
+<span class="s">    orang-orang yang mau foto-foto. gue sampe sempet ngantri cuma buat foto gedung doang."""</span>
 <span class="n">docs</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="sd">"""Museum jakarta, banyak peninggalan Zaman dulu, trus barang2nya udah Tua dan rapuh.. banyak cerita d museum ini</span>
-<span class="sd">    tentang kota jakarta..di museum ini seringkali foto-foto karena tempatnya bersejarah bgt jadi harus di</span>
-<span class="sd">    abadikan. Kayaknya museum sejarah jakarta menjadi spot 'penting' belakangan ini. tiap weekend pasti PENUH sama</span>
-<span class="sd">    orang-orang yang mau foto-foto. gue sampe sempet ngantri cuma buat foto gedung doang."""</span><span class="p">,</span>
+    <span class="sd">"""museumnya bagus.., kalo lagi liburan rame banget, ga cuma wisatawan dari Indonesia, tapi dari luar</span>
+<span class="sd">    negeri juga... luas banget lagi di dalemnya.... seru..!! hehehehe"""</span>
 
     <span class="sd">"""mau weekend tanpa mesti ngabisin duit ya dateng aja ke sini... kalo yang hobi fotografi juga banyak spot2 yang</span>
 <span class="sd">    menarik untuk difoto disini... kalo pengen moto arsitekturnya disarankan dateng pagi2 buta soalnya kalo udah agak</span>
@@ -112,21 +119,73 @@
 <span class="sd">    pertunjukan laser yang sangat indah dengan lampu-lampu sorot yang menawan. :)"""</span>
 <span class="p">]</span>
 
-<span class="n">wg</span> <span class="o">=</span> <span class="n">WordGraph</span><span class="p">(</span><span class="n">doc</span><span class="o">=</span><span class="n">doc</span><span class="p">,</span> <span class="n">docs</span><span class="o">=</span><span class="n">docs</span><span class="p">)</span>
-<span class="k">print</span> <span class="n">wg</span><span class="o">.</span><span class="n">analyze</span><span class="p">(</span><span class="n">count</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">percentage</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">pickle_get</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">statinfo</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">statinfo</span><span class="o">.</span><span class="n">st_size</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+            <span class="k">return</span> <span class="n">result</span>
+
+        <span class="k">raise</span> <span class="ne">OSError</span>
+    <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">None</span>
+
+
+<span class="k">def</span> <span class="nf">pickle_set</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s">'wb'</span><span class="p">)</span>
+    <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="n">_start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+<span class="n">fn</span> <span class="o">=</span> <span class="s">"wg.pickle"</span>
+<span class="n">wg</span> <span class="o">=</span> <span class="n">pickle_get</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">fn</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">wg</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+    <span class="n">wg</span> <span class="o">=</span> <span class="n">WordGrapher</span><span class="p">()</span>
+    <span class="n">wg</span><span class="o">.</span><span class="n">set_documents</span><span class="p">(</span><span class="n">docs</span><span class="o">=</span><span class="n">docs</span><span class="p">)</span>
+
+    <span class="n">d</span> <span class="o">=</span> <span class="s">""</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">docs</span><span class="p">:</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="s">"</span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="s">"</span> <span class="o">%</span> <span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
+    <span class="n">wg</span><span class="o">.</span><span class="n">set_document</span><span class="p">(</span><span class="n">doc</span><span class="o">=</span><span class="n">d</span><span class="p">)</span>
+
+    <span class="n">wg</span><span class="o">.</span><span class="n">analyze</span><span class="p">(</span><span class="n">count</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">percentage</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">pickle_set</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">fn</span><span class="p">,</span> <span class="n">obj</span><span class="o">=</span><span class="n">wg</span><span class="p">)</span>
+
+<span class="n">graph</span> <span class="o">=</span> <span class="n">wg</span><span class="o">.</span><span class="n">graph</span><span class="p">(</span><span class="n">word</span><span class="o">=</span><span class="s">"banget"</span><span class="p">)</span>
+<span class="n">elapsed</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">_start</span>
+
+<span class="k">print</span> <span class="n">graph</span>
+
+<span class="k">print</span> <span class="s">"</span><span class="se">\n</span><span class="s">Elapsed Time: </span><span class="si">%.18f</span><span class="s">"</span> <span class="o">%</span> <span class="p">(</span><span class="n">elapsed</span><span class="p">)</span>
 </pre></div>
+
+<h3>
+<a name="benchmark" class="anchor" href="#benchmark"><span class="octicon octicon-link"></span></a>Benchmark</h3>
+
+<p>The above code ran for <strong>639 seconds</strong> on its initial run. Once the TF-IDF score is calculated and pickled, it should
+take way faster to run with my laptop achieving <strong>0.03xxxx second</strong> in subsequent runs. This is still 1 core only, now
+adding codes to let it run concurrently.</p>
 
 <h2>
 <a name="development-history" class="anchor" href="#development-history"><span class="octicon octicon-link"></span></a>Development History</h2>
 
-<p><strong>0.1.0</strong> - Basic TF-IDF Methods</p>
-      </section>
+<p><strong>0.1.0</strong> - Basic TF-IDF Methods
+<strong>0.2.0</strong> - Working graph method
+<strong>0.3.0</strong> - Reworked graph method and added conpig for concurrency although yet to be implemented</p>
+        </section>
+
+        <footer>
+          Wordgraph is maintained by <a href="https://github.com/tistaharahap">tistaharahap</a><br>
+          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+        
+      </div>
     </div>
-    <footer>
-      <p>Project maintained by <a href="https://github.com/tistaharahap">tistaharahap</a></p>
-      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
-    </footer>
-    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
-    
   </body>
 </html>
